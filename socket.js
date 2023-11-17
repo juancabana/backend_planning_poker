@@ -1,16 +1,11 @@
-import { Server as WebSocketServer } from 'socket.io';
-import { httpServer } from './index.js';
+export default (io) => {
+  io.on('connection', (socket) => {
+    // IMPRIMIR EN CONSOLA CUANDO UN USUARIO SE CONECTA CON SU ID
+    // console.log('a user connected');
+    console.log(socket.id);
 
-export const io = new WebSocketServer(httpServer, {
-  cors: {
-    origins: ['http://localhost:4200'],
-  },
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
   });
-});
+};

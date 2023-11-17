@@ -1,7 +1,8 @@
 import express from 'express';
-import http from 'http';
-import connectDB from './src/lib/db.js';
 import { Server as WebSocketServer } from 'socket.io';
+import http from 'http';
+import { connectDB } from './src/lib/db.js';
+import Sockets from './socket.js';
 
 import {
   errorHandler,
@@ -9,38 +10,35 @@ import {
   boomErrorHandler,
 } from './src/middlewares/error.handler.js';
 import router from './src/routes/index.router.js';
+import { Socket } from 'dgram';
 
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello World!');
-});
+connectDB();
 
+const server = http.createServer(app);
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-connectDB();
 
-const httpServer = http.createServer(app);
-
-const io = new WebSocketServer(httpServer, {
+// Connect Socket.io to the same HTTP server
+const io = new WebSocketServer(server, {
   cors: {
     origins: ['http://localhost:4200'],
   },
 });
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
+Sockets(io);
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+app.get('/', (req, res) => {
+  res.status(200).send('Hello World!');
 });
 
+// Move the route setup after Socket.io setup
 app.use('/api', router);
 app.use(logErrors);
 app.use(boomErrorHandler);

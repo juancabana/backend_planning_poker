@@ -1,14 +1,9 @@
 import mongoose from 'mongoose';
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     await mongoose.connect(
-      'mongodb+srv://cabanajuan:Password123@cluster0.g0qhylu.mongodb.net/planning_poker',
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        dbName: 'planning_poker', // Agrega la opción dbName para especificar la base de datos
-      }
+      'mongodb+srv://cabanajuan:Password123@cluster0.g0qhylu.mongodb.net/planning_poker'
     );
     console.log('Conexión exitosa a MongoDB');
   } catch (error) {
@@ -16,5 +11,3 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-export default connectDB;
