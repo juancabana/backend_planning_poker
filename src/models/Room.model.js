@@ -13,12 +13,15 @@ const RoomSchema = new Schema({
     enum: ['active', 'inactive'],
     default: 'active',
   },
+  // Players es un array de objetos que por defecto es un array vacio
+
   players: [
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
   ],
+
   averageScore: {
     type: Number,
     default: 0,

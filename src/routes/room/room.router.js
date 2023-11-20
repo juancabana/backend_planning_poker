@@ -27,8 +27,8 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   const payload = req.body;
   try {
-    // const room = await service.createRoom(payload);
-    res.json(payload);
+    const room = await service.createRoom(payload);
+    res.json(room);
   } catch (err) {
     next(err);
   }

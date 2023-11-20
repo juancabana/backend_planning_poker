@@ -17,8 +17,8 @@ class RoomService {
     return room;
   };
 
-  createRoom = async (room) => {
-    const newRroom = await Room.create(room);
+  createRoom = async ({ tittle }) => {
+    const newRroom = await Room.create({ tittle });
     //   io.emit('newRoom', room);
     return newRroom;
   };

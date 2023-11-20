@@ -10,7 +10,7 @@ import {
   boomErrorHandler,
 } from './src/middlewares/error.handler.js';
 import router from './src/routes/index.router.js';
-import { Socket } from 'dgram';
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
@@ -20,6 +20,8 @@ connectDB();
 const server = http.createServer(app);
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+// Cors
+app.use(cors());
 
 server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
