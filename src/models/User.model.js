@@ -10,7 +10,11 @@ const UserSchema = new Schema({
     unique: true,
     minlength: 3,
   },
-
+  room_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'Room',
+    required: true,
+  },
   visualisation: {
     type: String,
     required: true,
@@ -22,3 +26,4 @@ const UserSchema = new Schema({
     default: false,
   },
 });
+export default model('User', UserSchema);

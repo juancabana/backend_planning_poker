@@ -1,6 +1,3 @@
-// Crea un esquema para la colección rooms:
-// Path: src/models/room.model.js
-
 import { Schema, model } from 'mongoose';
 
 const RoomSchema = new Schema({
@@ -13,7 +10,11 @@ const RoomSchema = new Schema({
     enum: ['active', 'inactive'],
     default: 'active',
   },
-  // Players es un array de objetos que por defecto es un array vacio
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
 
   players: [
     {
