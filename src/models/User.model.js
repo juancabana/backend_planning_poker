@@ -15,7 +15,7 @@ const UserSchema = new Schema({
     ref: 'Room',
     required: true,
   },
-  visualisation: {
+  visualization: {
     type: String,
     required: true,
     enum: ['player', 'spectator'],

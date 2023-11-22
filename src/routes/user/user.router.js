@@ -12,7 +12,7 @@ router.post('/', async (req, res, next) => {
   try {
     const user = await serviceUser.createUser(payload);
     await roomService.addUserToRoom(user.room_id, user);
-
+    console.log(payload);
     res.json(user);
   } catch (err) {
     next(err);
