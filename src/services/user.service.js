@@ -4,10 +4,10 @@ import RoomModel from '../models/Room.model.js';
 
 class UserService {
   createUser = async (payload) => {
-    const { username, room_id, visualization } = payload;
+    const { username, room_id, visualization, is_owner } = payload;
     const room = await RoomModel.findById(room_id);
     if (!room) {
-      throw boom.notFound('Room not found' + room_id + ' ' + username);
+      throw boom.notFound('Room not found');
     }
 
     const newUser = await User.create({
