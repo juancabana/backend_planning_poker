@@ -23,6 +23,10 @@ const UserSchema = new Schema({
 
   is_owner: {
     type: Boolean,
+    default: true,
+  },
+  is_connected: {
+    type: Boolean,
     default: false,
   },
 });
