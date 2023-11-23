@@ -1,7 +1,7 @@
 export default (io) => {
   io.on('connection', (socket) => {
     const { id, handshake } = socket;
-    const { nameRoom } = handshake.query;
+    const { nameRoom, idUser } = handshake.query;
 
     console.log(`User connected ${id} ==> ${nameRoom}`);
     socket.join(nameRoom);
@@ -9,6 +9,7 @@ export default (io) => {
 
     socket.on('disconnect', () => {
       console.log('user disconnected');
+      socket.broadcast.emit('userDisconected', idUser);
     });
 
     socket.on('createUser', (data) => {
