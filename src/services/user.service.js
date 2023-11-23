@@ -33,7 +33,15 @@ class UserService {
     }
     return user;
   };
-  u;
+  updateUser = async (id, payload) => {
+    const updatedUser = await User.findByIdAndUpdate(id, payload, {
+      new: true,
+    });
+    if (!updatedUser) {
+      throw boom.notFound('User not found');
+    }
+    return updatedUser;
+  };
 }
 
 export default UserService;

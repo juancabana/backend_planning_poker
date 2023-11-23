@@ -27,7 +27,7 @@ const UserSchema = new Schema({
   },
   is_connected: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 export default model('User', UserSchema);
