@@ -18,31 +18,39 @@ export default (io) => {
     existId();
 
     console.log(`User connected ${id} ==> ${nameRoom}`);
+    console.log(thisUser);
     socket.join(nameRoom);
     // Cuando se conecta un nuevo usuario haz o siguiente:
     // 1. Obtener los usuarios que hay en el caché
     const players = getFromCache('players');
 
-    if (is_registered) {
-      console.log('is_registered');
-      if (user._id) {
-        const userConnected = players.find((player) => player._id === idUser);
-        const newPlayers = [...players, { is_active: true, ...userConnected }];
-        setInCache('players', newPlayers);
-        socket.broadcast.emit('userConnected', newPlayers);
+    // Funcion para saber si el usuario ya existe en la lista de players
+    const existUser = (id) => {
+      const players = getFromCache('players');
+      // Saber si en players existe un usuario con el mismo id
+      if (!players) return false;
+      if (players.length === 0) return false;
+      if (players.length > 0) {
+        const userConnected = players.find((player) => player._id === id);
+        if (userConnected) return true;
       }
-    } else {
-      console.log('is not registered');
-      // const players = getFromCache('players');
-      // if (!players && !is_registered) {
-      //   setInCache('players', [{ is_active: true, ...user }]);
-      //   socket.broadcast.emit('userConnected', [{ is_active: true, ...user }]);
-      //   return;
+    };
+
+    if (thisUser._id) {
+      console.log('is_registered');
+      // if (user._id) {
+      // const userConnected = players.find((player) => player._id === idUser);
+      if (!players) return;
+      if (players.length === 0) {
+        socket.broadcast.emit('userConnected', getFromCache('players'));
+        return setInCache('players', [thisUser]);
+      }
+      if (players.length > 0 && existUser(thisUser._id)) {
+        const userConnected = players.find((player) => player._id === idUser);
+        socket.broadcast.emit('userConnected', getFromCache('players'));
+        if (userConnected) return;
+      }
       // }
-      // // const newListPlayers = [...players, { is_active: true, ...user }];
-      // // setInCache('players', newListPlayers);
-      // // 3. Emitir la lista de usuarios a todos los clientes
-      // socket.broadcast.emit('userConnected', players);
     }
 
     eventEmitter.on('userCreated', (newPlayers) => {
@@ -51,7 +59,7 @@ export default (io) => {
 
     socket.on('disconnect', () => {
       // console.log(JSON.parse(handshake.query.user));
-      console.log(thisUser);
+      // console.log(thisUser);
       // Eliminar usuario desconectado de la lista de usuarios
       const players = getFromCache('players');
       if (!players) return;
