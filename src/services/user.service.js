@@ -28,7 +28,7 @@ class UserService {
       setInCache('players', [newUser]);
     }
     const newPlayers = getFromCache('players');
-    console.log(newPlayers);
+    // console.log(newPlayers);
     eventEmitter.emit('userCreated', newPlayers);
     return newUser;
   };

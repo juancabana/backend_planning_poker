@@ -1,9 +1,21 @@
 import { eventEmitter } from './src/services/user.service.js';
 import { getFromCache, setInCache } from './cache.js';
+import { disconnect } from 'mongoose';
 export default (io) => {
   io.on('connection', (socket) => {
     const { id, handshake } = socket;
-    const { nameRoom, idUser, user, is_registered } = handshake.query;
+    const { nameRoom, user, is_registered } = handshake.query;
+    const thisUser = JSON.parse(user);
+    let idUser = false;
+
+    const existId = () => {
+      if (!thisUser) return false;
+      if (thisUser._id) {
+        idUser = thisUser._id;
+        return idUser;
+      }
+    };
+    existId();
 
     console.log(`User connected ${id} ==> ${nameRoom}`);
     socket.join(nameRoom);
@@ -33,33 +45,22 @@ export default (io) => {
       // socket.broadcast.emit('userConnected', players);
     }
 
-    socket.on('disconnect', (id) => {
-      const players = getFromCache('players');
-      if (is_registered && user._id) {
-        const newPlayers = players.filter((player) => player._id !== idUser);
-        setInCache('players', newPlayers);
-        console.log(`User disconnected - registered`, newPlayers);
-        socket.broadcast.emit('userDisconected', newPlayers);
-        // const userDisconnected = players.find((user) => user._id === idUser);
-        // const newPlayers = [
-        //   ...players,
-        //   { is_active: false, ...userDisconnected },
-        // ];
-        // setInCache('players', newPlayers);
-        // socket.broadcast.emit('userDisconected', user);
-        return;
-      }
-      if (!players) {
-        console.log(`User disconnected - not registered - !players`, []);
-        socket.broadcast.emit('userDisconected', []);
-        return;
-      }
-      console.log(`User disconnected - not registered - players`, players);
-      socket.broadcast.emit('userDisconected', players);
-    });
-
     eventEmitter.on('userCreated', (newPlayers) => {
       socket.broadcast.emit('userCreated', newPlayers);
+    });
+
+    socket.on('disconnect', () => {
+      // console.log(JSON.parse(handshake.query.user));
+      console.log(thisUser);
+      // Eliminar usuario desconectado de la lista de usuarios
+      const players = getFromCache('players');
+      if (!players) return;
+
+      const newListPlayers = players.filter(
+        (player) => player._id != thisUser._id
+      );
+      setInCache('players', newListPlayers);
+      socket.broadcast.emit('userDisconected', newListPlayers);
     });
   });
 };
