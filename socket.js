@@ -1,6 +1,4 @@
-import UserService from './src/services/user.service.js';
-
-const userService = new UserService();
+import { eventEmitter } from './src/services/user.service.js';
 
 export default (io) => {
   io.on('connection', (socket) => {
@@ -10,24 +8,16 @@ export default (io) => {
     console.log(`User connected ${id} ==> ${nameRoom}`);
     socket.join(nameRoom);
     // Cuando se conecta un nuevo usuario haz o siguiente:
-    socket.on('userConnected', (data) => {
-      if (idUser) {
-        userService.updateUser(idUser, { is_connected: true });
-      }
-      socket.broadcast.emit('userConnected', data);
+    // socket.on('userConnected', (data) => {
+    socket.broadcast.emit('userConnected', user);
+    // });
+
+    socket.on('disconnect', (id) => {
+      socket.broadcast.emit('userDisconected', user);
     });
 
-    socket.on('disconnect', () => {
-      console.log('user disconnected');
-      if (idUser) {
-        userService.updateUser(idUser, { is_connected: false });
-      }
-      socket.broadcast.emit('userDisconected', idUser);
-    });
-
-    socket.on('createUser', (data) => {
-      // console.log(data);
-      socket.broadcast.emit('createUser', data);
+    eventEmitter.on('createUser', (newUser) => {
+      socket.emit('userCreated', newUser);
     });
   });
 };
