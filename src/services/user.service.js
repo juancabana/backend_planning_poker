@@ -1,8 +1,8 @@
 import User from '../models/User.model.js';
 import boom from '@hapi/boom';
 import RoomModel from '../models/Room.model.js';
-import io from './../../socket.js';
 import { EventEmitter } from 'events';
+import { getFromCache, setInCache } from './../../cache.js';
 
 const eventEmitter = new EventEmitter();
 
@@ -20,7 +20,16 @@ class UserService {
       visualization,
       is_owner: room.players.length === 0,
     });
-    eventEmitter.emit('createUser', newUser);
+    // Almacenar el usuario en los usuarios que hay en el caché
+    const users = getFromCache('players');
+    if (users) {
+      setInCache('players', [...users, newUser]);
+    } else {
+      setInCache('players', [newUser]);
+    }
+    const newPlayers = getFromCache('players');
+    console.log(newPlayers);
+    eventEmitter.emit('userCreated', newPlayers);
     return newUser;
   };
   findOne = async (id) => {

@@ -1,6 +1,7 @@
 import Room from '../models/Room.model.js';
 import boom from '@hapi/boom';
 import UserService from './user.service.js';
+import { getFromCache, setInCache } from './../../cache.js';
 
 const userService = new UserService();
 
@@ -14,7 +15,8 @@ class RoomService {
     try {
       const room = await Room.findById(id);
       if (!room) {
-        throw boom.notFound('Room not found');
+        return null;
+        // throw boom.notFound('Room not found');
       }
 
       // Consultar los objetos completos de los jugadores
@@ -35,9 +37,12 @@ class RoomService {
     }
   };
   createRoom = async ({ tittle }) => {
-    const newRroom = await Room.create({ tittle });
-    //   io.emit('newRoom', room);
-    return newRroom;
+    const newRoom = await Room.create({ tittle });
+    let players = getFromCache('players'); // Asegúrate de que 'myCache' esté definido y sea accesible
+    if (!players) {
+      players = [];
+    }
+    return { ...newRoom._doc, players };
   };
   deleteRoom = async (id) => {
     const room = await Room.findByIdAndDelete(id);

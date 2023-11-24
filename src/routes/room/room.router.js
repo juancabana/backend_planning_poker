@@ -1,5 +1,6 @@
 import express from 'express';
 import RoomService from '../../services/room.service.js';
+import { getFromCache } from '../../../cache.js';
 
 const router = express.Router();
 const service = new RoomService();
@@ -9,6 +10,15 @@ router.get('/:id', async (req, res, next) => {
   try {
     const room = await service.findOne(id);
     res.json(room);
+  } catch (err) {
+    next(err);
+  }
+});
+router.get('/:id/players', async (req, res, next) => {
+  // const { id } = req.params;
+  try {
+    const players = getFromCache('players');
+    res.json(players);
   } catch (err) {
     next(err);
   }
