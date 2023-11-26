@@ -18,6 +18,7 @@ router.get('/:id/players', async (req, res, next) => {
   // const { id } = req.params;
   try {
     const players = getFromCache('players');
+    if (!players) return res.json([]);
     res.json(players);
   } catch (err) {
     next(err);

@@ -22,13 +22,13 @@ class UserService {
     });
     // Almacenar el usuario en los usuarios que hay en el caché
     const users = getFromCache('players');
-    if (users) {
-      setInCache('players', [...users, newUser]);
-    } else {
+
+    if (!users) {
       setInCache('players', [newUser]);
+      return newUser;
     }
-    const newPlayers = getFromCache('players');
-    // console.log(newPlayers);
+    const newPlayers = [...users, newUser];
+    setInCache('players', newPlayers);
     eventEmitter.emit('userCreated', newPlayers);
     return newUser;
   };
