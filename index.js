@@ -11,6 +11,7 @@ import {
 } from './src/middlewares/error.handler.js';
 import router from './src/routes/index.router.js';
 import cors from 'cors';
+// import { setInCache } from './cache.js';
 
 const app = express();
 const port = 3000;

@@ -1,6 +1,5 @@
 import { eventEmitter } from './src/services/user.service.js';
 import { getFromCache, setInCache } from './cache.js';
-import { disconnect } from 'mongoose';
 export default (io) => {
   io.on('connection', (socket) => {
     const { id, handshake } = socket;
@@ -56,17 +55,23 @@ export default (io) => {
     eventEmitter.on('userCreated', (newPlayers) => {
       socket.broadcast.emit('userCreated', newPlayers);
     });
+    socket.on('cardSelected', (value) => {
+      // console.log('Se ha seleccionado una carta', value);
+      socket.broadcast.emit('cardSelected', value);
+    });
 
-    // socket.on('disconnect', () => {
-    //   console.log(`User DISCONECTED ${id} ==> ${nameRoom}`);
-    //   const players = getFromCache('players');
-    //   if (!players) return;
+    socket.on('disconnect', () => {
+      console.log(`User DISCONECTED ${id}`);
+      console.log(user);
+      console.log(thisUser);
+      // const players = getFromCache('players');
+      // if (!players || !thisUser) return;
 
-    //   const newListPlayers = players.filter(
-    //     (player) => player._id != thisUser._id
-    //   );
-    //   setInCache('players', newListPlayers);
-    //   socket.broadcast.emit('userDisconected', newListPlayers);
-    // });
+      // const newListPlayers = players.filter(
+      //   (player) => player._id != thisUser._id
+      // );
+      // setInCache('players', newListPlayers);
+      // socket.broadcast.emit('userDisconected', newListPlayers);
+    });
   });
 };
