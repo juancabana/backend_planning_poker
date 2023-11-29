@@ -21,9 +21,22 @@ export default (io) => {
     eventEmitter.on('userCreated', (newPlayers) => {
       socket.broadcast.emit('userCreated', newPlayers);
     });
-    socket.on('cardSelected', (value) => {
-      // console.log('Se ha seleccionado una carta', value);
-      socket.broadcast.emit('cardSelected', value);
+    socket.on('cardSelected', ({ index, lastSelected }) => {
+      console.log(index, lastSelected);
+      // Obtener las cartas del cache
+      const cards = getFromCache('card_options');
+
+      if (lastSelected !== null) {
+        // La tarjeta que tiene en la propiedad value igual que lastSelected, va a ser igual a false
+        cards.map((card) => {
+          if (card.value === lastSelected) {
+            card.selected = false;
+          }
+        });
+      }
+      cards[index].selected = true;
+      setInCache('card_options', cards);
+      socket.broadcast.emit('cardSelected', cards);
     });
 
     socket.on('disconnect', () => {
