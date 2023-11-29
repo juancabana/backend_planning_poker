@@ -17,40 +17,6 @@ export default (io) => {
     // existId();
 
     console.log(`User CONNECTED ${id} ==> ${nameRoom}`);
-    // console.log(user);
-    // socket.join(nameRoom);
-    // // Cuando se conecta un nuevo usuario haz o siguiente:
-    // // 1. Obtener los usuarios que hay en el caché
-    // const players = getFromCache('players');
-
-    // // Funcion para saber si el usuario ya existe en la lista de players
-    // const existUser = (id) => {
-    //   const players = getFromCache('players');
-    //   // Saber si en players existe un usuario con el mismo id
-    //   if (!players) return false;
-    //   if (players.length === 0) return false;
-    //   if (players.length > 0) {
-    //     const userConnected = players.find((player) => player._id === id);
-    //     if (userConnected) return true;
-    //   }
-    // };
-
-    // if (thisUser._id) {
-    //   console.log('is_registered');
-    //   // if (user._id) {
-    //   // const userConnected = players.find((player) => player._id === idUser);
-    //   if (!players) return;
-    //   if (players.length === 0) {
-    //     socket.broadcast.emit('userConnected', getFromCache('players'));
-    //     return setInCache('players', [thisUser]);
-    //   }
-    //   if (players.length > 0 && existUser(thisUser._id)) {
-    //     const userConnected = players.find((player) => player._id === idUser);
-    //     socket.broadcast.emit('userConnected', getFromCache('players'));
-    //     if (userConnected) return;
-    //   }
-    //   // }
-    // }
 
     eventEmitter.on('userCreated', (newPlayers) => {
       socket.broadcast.emit('userCreated', newPlayers);

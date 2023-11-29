@@ -54,15 +54,5 @@ router.delete('/:id', async (req, res, next) => {
     next(err);
   }
 });
-// Ruta para obtener las tarjetas a elegir
-router.get('/card_options', async (req, res, next) => {
-  try {
-    const cardOptions = getFromCache('card_options');
-    if (!cardOptions) return res.json([]);
-    res.json(cardOptions);
-  } catch (err) {
-    next(err);
-  }
-});
 
 export default router;
