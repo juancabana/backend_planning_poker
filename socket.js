@@ -51,6 +51,9 @@ export default (io) => {
       socket.broadcast.emit('userCreated', newListPlayers);
       // console.log(ID_user);
     });
+    socket.on('reveal-cards', (cardsSelected) => {
+      socket.broadcast.emit('reveal-cards', cardsSelected);
+    });
 
     socket.on('disconnect', () => {
       console.log(`User DISCONECTED ${id}`);
