@@ -30,7 +30,7 @@ const UserSchema = new Schema({
     default: true,
   },
   selected_card: {
-    type: Boolean,
+    type: Number,
     default: false,
   },
 });

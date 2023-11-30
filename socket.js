@@ -43,19 +43,19 @@ export default (io) => {
 
       const newListPlayers = players.map((player) => {
         if (player._id == ID_user) {
-          player.selected_card = true;
+          player.selected_card = cards[index].value;
         }
         return player;
       });
       setInCache('players', newListPlayers);
       socket.broadcast.emit('userCreated', newListPlayers);
-      console.log(ID_user);
+      // console.log(ID_user);
     });
 
     socket.on('disconnect', () => {
       console.log(`User DISCONECTED ${id}`);
-      console.log(user);
-      console.log(thisUser);
+      // console.log(user);
+      // console.log(thisUser);
       // const players = getFromCache('players');
       // if (!players || !thisUser) return;
 
