@@ -28,15 +28,6 @@ app.use(cors());
 server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
-
-// Connect Socket.io to the same HTTP server
-const io = new WebSocketServer(server, {
-  cors: {
-    origins: ['http://localhost:4200'],
-  },
-});
-
-Sockets(io);
 setInCache('card_options', [
   { value: 0, viewValue: '0', selected: false },
   { value: 1, viewValue: '1', selected: false },
@@ -51,6 +42,16 @@ setInCache('card_options', [
   { value: 144, viewValue: '?', selected: false },
   { value: 233, viewValue: '☕', selected: false },
 ]);
+
+// Connect Socket.io to the same HTTP server
+const io = new WebSocketServer(server, {
+  cors: {
+    origins: ['http://localhost:4200'],
+  },
+});
+
+Sockets(io);
+
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
 });

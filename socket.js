@@ -21,7 +21,7 @@ export default (io) => {
     eventEmitter.on('userCreated', (newPlayers) => {
       socket.broadcast.emit('userCreated', newPlayers);
     });
-    socket.on('cardSelected', ({ index, lastSelected }) => {
+    socket.on('cardSelected', ({ index, lastSelected, ID_user }) => {
       console.log(index, lastSelected);
       // Obtener las cartas del cache
       const cards = getFromCache('card_options');
@@ -37,6 +37,19 @@ export default (io) => {
       cards[index].selected = true;
       setInCache('card_options', cards);
       socket.broadcast.emit('cardSelected', cards);
+      // Establecer la propiedad selected_card del usuario en true
+      const players = getFromCache('players');
+      // if (!players || !thisUser) return;
+
+      const newListPlayers = players.map((player) => {
+        if (player._id == ID_user) {
+          player.selected_card = true;
+        }
+        return player;
+      });
+      setInCache('players', newListPlayers);
+      socket.broadcast.emit('userCreated', newListPlayers);
+      console.log(ID_user);
     });
 
     socket.on('disconnect', () => {
