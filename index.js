@@ -12,7 +12,20 @@ import {
 import router from './src/routes/index.router.js';
 import cors from 'cors';
 import { setInCache, getFromCache } from './cache.js';
-
+setInCache('card_options', [
+  { value: 0, viewValue: '0', selected: false },
+  { value: 1, viewValue: '1', selected: false },
+  { value: 3, viewValue: '3', selected: false },
+  { value: 5, viewValue: '5', selected: false },
+  { value: 8, viewValue: '8', selected: false },
+  { value: 13, viewValue: '13', selected: false },
+  { value: 21, viewValue: '21', selected: false },
+  { value: 34, viewValue: '34', selected: false },
+  { value: 55, viewValue: '55', selected: false },
+  { value: 89, viewValue: '89', selected: false },
+  { value: 144, viewValue: '?', selected: false },
+  { value: 233, viewValue: '☕', selected: false },
+]);
 const app = express();
 const port = 3000;
 
@@ -42,20 +55,6 @@ app.get('/', (req, res) => {
 });
 // Ruta para obtener las tarjetas a elegir
 app.get('/api/card_options', async (req, res, next) => {
-  setInCache('card_options', [
-    { value: 0, viewValue: '0', selected: false },
-    { value: 1, viewValue: '1', selected: false },
-    { value: 3, viewValue: '3', selected: false },
-    { value: 5, viewValue: '5', selected: false },
-    { value: 8, viewValue: '8', selected: false },
-    { value: 13, viewValue: '13', selected: false },
-    { value: 21, viewValue: '21', selected: false },
-    { value: 34, viewValue: '34', selected: false },
-    { value: 55, viewValue: '55', selected: false },
-    { value: 89, viewValue: '89', selected: false },
-    { value: 144, viewValue: '?', selected: false },
-    { value: 233, viewValue: '☕', selected: false },
-  ]);
   try {
     const cardOptions = getFromCache('card_options');
     if (!cardOptions) return res.json([]);
