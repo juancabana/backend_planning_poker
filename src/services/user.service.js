@@ -11,7 +11,7 @@ class UserService {
     const { username, room_id, visualization, is_owner } = payload;
     const room = await RoomModel.findById(room_id);
     if (!room) {
-      throw boom.notFound('Room not found');
+      throw boom.notFound('Room not found' + username);
     }
 
     const newUser = await User.create({
