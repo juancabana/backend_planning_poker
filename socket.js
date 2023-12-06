@@ -3,9 +3,8 @@ import { getFromCache, setInCache } from './cache.js';
 export default (io) => {
   io.on('connection', (socket) => {
     const { id, handshake } = socket;
-    const { nameRoom, user, is_registered } = handshake.query;
-    const thisUser = JSON.parse(user);
-    let idUser = false;
+    const { nameRoom, user } = handshake.query;
+
 
 
     console.log(`User CONNECTED ${id} ==> ${nameRoom}`);
@@ -52,19 +51,14 @@ export default (io) => {
       socket.broadcast.emit('reveal-cards', cardsSelected);
     });
 
+    socket.on('restart', () => {
+      const players = getFromCache('players');
+      const newPlayers = players.map((player) => {
+        player.selected_card = -3;
+        return player;
+      });
+      socket.broadcast.emit('restart', newPlayers);
+    })
 
-    socket.on('disconnect', () => {
-      console.log(`User DISCONECTED ${id}`);
-      // console.log(user);
-      // console.log(thisUser);
-      // const players = getFromCache('players');
-      // if (!players || !thisUser) return;
-
-      // const newListPlayers = players.filter(
-      //   (player) => player._id != thisUser._id
-      // );
-      // setInCache('players', newListPlayers);
-      // socket.broadcast.emit('userDisconected', newListPlayers);
-    });
   });
 };
