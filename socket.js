@@ -51,12 +51,14 @@ export default (io) => {
       socket.broadcast.emit('reveal-cards', cardsSelected);
     });
 
-    socket.on('restart', () => {
+    socket.on('restart', (idUser) => {
       const players = getFromCache('players');
       const newPlayers = players.map((player) => {
         player.selected_card = -3;
+        player._id == idUser ? (player.is_owner = true) : (player.is_owner = false);
         return player;
       });
+      setInCache('players', newPlayers);
       socket.broadcast.emit('restart', newPlayers);
     })
 

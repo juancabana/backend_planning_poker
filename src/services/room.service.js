@@ -30,7 +30,7 @@ class RoomService {
       // Actualizar la propiedad "players" con los objetos completos
       room.players = players;
 
-      return room;
+      return room._doc;
     } catch (error) {
       // Manejar errores, log, o re-lanzar según sea necesario
       throw error;

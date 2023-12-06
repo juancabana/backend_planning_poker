@@ -20,17 +20,27 @@ class UserService {
       visualization,
       is_owner: room.players.length === 0,
     });
+    const userOptimized = {
+      _id: newUser._id,
+      username: newUser.username,
+      room_id: newUser.room_id,
+      visualization: newUser.visualization,
+      is_owner: newUser.is_owner,
+      is_connected: newUser.is_connected,
+      selected_card: newUser.selected_card,
+    };
+  
     // Almacenar el usuario en los usuarios que hay en el caché
     const users = getFromCache('players');
 
     if (!users) {
-      setInCache('players', [newUser]);
-      return newUser;
+      setInCache('players', [userOptimized]);
+      return userOptimized;
     }
-    const newPlayers = [...users, newUser];
+    const newPlayers = [...users, userOptimized];
     setInCache('players', newPlayers);
     eventEmitter.emit('userCreated', newPlayers);
-    return newUser;
+    return userOptimized;
   };
   findOne = async (id) => {
     const user = User.findById(id);
