@@ -31,7 +31,7 @@ const UserSchema = new Schema({
   },
   selected_card: {
     type: Number,
-    default: false,
+    default: -1,
   },
 });
 export default model('User', UserSchema);
