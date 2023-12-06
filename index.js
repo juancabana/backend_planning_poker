@@ -53,8 +53,8 @@ app.get('/api/card_options', async (req, res, next) => {
     { value: 34, viewValue: '34', selected: false },
     { value: 55, viewValue: '55', selected: false },
     { value: 89, viewValue: '89', selected: false },
-    { value: 144, viewValue: '?', selected: false },
-    { value: 233, viewValue: '☕', selected: false },
+    { value: -1, viewValue: '?', selected: false },
+    { value: -2, viewValue: '☕', selected: false },
   ]);
   try {
     const cardOptions = getFromCache('card_options');

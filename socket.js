@@ -7,14 +7,6 @@ export default (io) => {
     const thisUser = JSON.parse(user);
     let idUser = false;
 
-    // const existId = () => {
-    //   if (!thisUser) return false;
-    //   if (thisUser._id) {
-    //     idUser = thisUser._id;
-    //     return idUser;
-    //   }
-    // };
-    // existId();
 
     console.log(`User CONNECTED ${id} ==> ${nameRoom}`);
 
