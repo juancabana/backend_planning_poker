@@ -27,7 +27,6 @@ class UserService {
       visualization: newUser.visualization,
       is_owner: newUser.is_owner,
       is_connected: newUser.is_connected,
-      selected_card: newUser.selected_card,
     };
   
     // Almacenar el usuario en los usuarios que hay en el caché

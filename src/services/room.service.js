@@ -15,8 +15,8 @@ class RoomService {
     try {
       const room = await Room.findById(id);
       if (!room) {
-        return null;
-        // throw boom.notFound('Room not found');
+        // return null;
+        throw boom.notFound('Room not found');
       }
 
       // Consultar los objetos completos de los jugadores
