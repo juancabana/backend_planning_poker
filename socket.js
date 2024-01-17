@@ -10,7 +10,7 @@ export default (io) => {
       socket.broadcast.emit('userCreated', newPlayers);
     });
 
-    socket.on('cardSelected', ({ index, lastSelected, idUser }) => {
+    socket.on('cardSelected', ({ index, idUser }) => {
       const cards = getFromCache('card_options');
       const players = getFromCache('players');
       const newListPlayers = players.map((player) => {
