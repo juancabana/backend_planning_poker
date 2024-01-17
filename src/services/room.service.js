@@ -15,8 +15,8 @@ class RoomService {
     try {
       const room = await Room.findById(id);
       if (!room) {
-        return null;
-        // throw boom.notFound('Room not found');
+        // return null;
+        throw boom.notFound('Room not found');
       }
 
       // Consultar los objetos completos de los jugadores
@@ -30,7 +30,7 @@ class RoomService {
       // Actualizar la propiedad "players" con los objetos completos
       room.players = players;
 
-      return room;
+      return room._doc;
     } catch (error) {
       // Manejar errores, log, o re-lanzar según sea necesario
       throw error;

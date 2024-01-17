@@ -29,5 +29,9 @@ const UserSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  selected_card: {
+    type: Number,
+    default: -3,
+  },
 });
 export default model('User', UserSchema);

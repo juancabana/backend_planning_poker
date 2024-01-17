@@ -1,72 +1,47 @@
 import { eventEmitter } from './src/services/user.service.js';
-import { getFromCache, setInCache } from './cache.js';
-import { disconnect } from 'mongoose';
+import { getFromCache, setInCache, restartCache } from './cache.js';
+
 export default (io) => {
   io.on('connection', (socket) => {
-    const { id, handshake } = socket;
-    const { nameRoom, user, is_registered } = handshake.query;
-    const thisUser = JSON.parse(user);
-    let idUser = false;
-
-    // const existId = () => {
-    //   if (!thisUser) return false;
-    //   if (thisUser._id) {
-    //     idUser = thisUser._id;
-    //     return idUser;
-    //   }
-    // };
-    // existId();
-
-    console.log(`User CONNECTED ${id} ==> ${nameRoom}`);
-    // console.log(user);
-    // socket.join(nameRoom);
-    // // Cuando se conecta un nuevo usuario haz o siguiente:
-    // // 1. Obtener los usuarios que hay en el caché
-    // const players = getFromCache('players');
-
-    // // Funcion para saber si el usuario ya existe en la lista de players
-    // const existUser = (id) => {
-    //   const players = getFromCache('players');
-    //   // Saber si en players existe un usuario con el mismo id
-    //   if (!players) return false;
-    //   if (players.length === 0) return false;
-    //   if (players.length > 0) {
-    //     const userConnected = players.find((player) => player._id === id);
-    //     if (userConnected) return true;
-    //   }
-    // };
-
-    // if (thisUser._id) {
-    //   console.log('is_registered');
-    //   // if (user._id) {
-    //   // const userConnected = players.find((player) => player._id === idUser);
-    //   if (!players) return;
-    //   if (players.length === 0) {
-    //     socket.broadcast.emit('userConnected', getFromCache('players'));
-    //     return setInCache('players', [thisUser]);
-    //   }
-    //   if (players.length > 0 && existUser(thisUser._id)) {
-    //     const userConnected = players.find((player) => player._id === idUser);
-    //     socket.broadcast.emit('userConnected', getFromCache('players'));
-    //     if (userConnected) return;
-    //   }
-    //   // }
-    // }
+    // const { id, handshake } = socket;
+    // const { nameRoom, user } = handshake.query;
 
     eventEmitter.on('userCreated', (newPlayers) => {
       socket.broadcast.emit('userCreated', newPlayers);
     });
 
-    // socket.on('disconnect', () => {
-    //   console.log(`User DISCONECTED ${id} ==> ${nameRoom}`);
-    //   const players = getFromCache('players');
-    //   if (!players) return;
+    socket.on('cardSelected', ({ index, idUser }) => {
+      const cards = getFromCache('card_options');
+      const players = getFromCache('players');
+      const newListPlayers = players.map((player) => {
+        if (player._id == idUser) {
+          player.selected_card = cards[index];
+        }
+        return player;
+      });
+      setInCache('players', newListPlayers);
+      socket.broadcast.emit('cardSelected', newListPlayers);
+    });
+    
+    socket.on('reveal-cards', (cardsSelected) => {
+      socket.broadcast.emit('reveal-cards', cardsSelected);
+    });
 
-    //   const newListPlayers = players.filter(
-    //     (player) => player._id != thisUser._id
-    //   );
-    //   setInCache('players', newListPlayers);
-    //   socket.broadcast.emit('userDisconected', newListPlayers);
-    // });
+    socket.on('restart', (idUser) => {
+      const players = getFromCache('players');
+      const newPlayers = players.map((player) => {
+        delete player.selected_card
+        player._id == idUser ? (player.is_owner = true) : (player.is_owner = false);
+        return player; 
+      });
+      setInCache('players', newPlayers);
+      socket.broadcast.emit('restart', newPlayers);
+    })
+
+    socket.on('disconnect', () => {
+      if (io.engine.clientsCount == 0) {
+        restartCache()
+      }
+    })
   });
 };
