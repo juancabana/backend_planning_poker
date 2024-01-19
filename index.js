@@ -23,7 +23,7 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // Cors
 app.use(cors({
-  origin: 'http://localhost:4200',
+  origin: 'https://d2tab6vtays6s5.cloudfront.net',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }));
 
@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
 });
 // Ruta para obtener las tarjetas a elegir
-app.get('/api/card_options', (req, res, next) => {
+app.get('/api/card_options', async (req, res, next) => {
   setInCache('card_options', [
     { id: 0 , value: 0, viewValue: '0' },
     { id: 1 , value: 1, viewValue: '1'},
