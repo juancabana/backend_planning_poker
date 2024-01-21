@@ -23,7 +23,7 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 // Cors
 app.use(cors({
-  origin: ['https://d28viq3vqemrii.cloudfront.net', 'http://localhost:4200'],
+  origin: ['https://d1wnuc3oc7ve09.cloudfront.net', 'http://localhost:4200'],
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }));
 
