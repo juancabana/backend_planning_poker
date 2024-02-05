@@ -4,11 +4,7 @@ import http from 'http';
 import { connectDB } from './src/lib/db.js';
 import Sockets from './socket.js';
 
-import {
-  errorHandler,
-  logErrors,
-  boomErrorHandler,
-} from './src/middlewares/error.handler.js';
+import { errorHandler, logErrors, boomErrorHandler} from './src/middlewares/error.handler.js';
 import router from './src/routes/index.router.js';
 import cors from 'cors';
 import { setInCache, getFromCache } from './cache.js';
@@ -19,19 +15,18 @@ const port = 3000;
 connectDB();
 
 const server = http.createServer(app);
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // Cors
 app.use(cors({
   origin: ['https://d1wnuc3oc7ve09.cloudfront.net', 'http://localhost:4200'],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200 
 }));
 
 server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
 
-// Connect Socket.io to the same HTTP server
 const io = new WebSocketServer(server, {
   cors: {
     origins: ['http://localhost:4200'],
@@ -43,7 +38,7 @@ Sockets(io);
 app.get('/', (req, res) => {
   res.status(200).send('Hello World!');
 });
-// Ruta para obtener las tarjetas a elegir
+
 app.get('/api/card_options', async (req, res, next) => {
   setInCache('card_options', [
     { id: 0 , value: 0, viewValue: '0' },
@@ -67,7 +62,7 @@ app.get('/api/card_options', async (req, res, next) => {
     next(err);
   }
 });
-// Move the route setup after Socket.io setup
+
 app.use('/api', router);
 app.use(logErrors);
 app.use(boomErrorHandler);
